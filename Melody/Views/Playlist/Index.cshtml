@@ -1,0 +1,9 @@
+﻿@model List<Playlist>
+
+@{
+    ViewData["Title"] = "My playlists";
+}
+
+@foreach(var playlist in Model) {
+	<p>@playlist.Title</p>
+}

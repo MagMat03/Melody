@@ -1,0 +1,9 @@
+﻿@model List<Song>
+
+@{
+    ViewData["Title"] = "Songs";
+}
+
+@foreach(var song in Model) {
+	<p>@song.Artist.FirstName @song.Artist.LastName - @song.Title</p>
+}
