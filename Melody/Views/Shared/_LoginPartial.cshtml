@@ -8,8 +8,8 @@
     <li class="nav-item">
         <a  class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @User.Identity?.Name!</a>
     </li>
-      <a class="nav-link text-dark" asp-area="" asp-controller="Song" asp-action="Index">Songs</a>
-      <a class="nav-link text-dark" asp-area="" asp-controller="Playlist" asp-action="Index">My playlists</a>
+      <a class="nav-link text-dark" asp-area="" asp-controller="Songs" asp-action="Index">Songs</a>
+      <a class="nav-link text-dark" asp-area="" asp-controller="Playlists" asp-action="Index">My playlists</a>
     <li class="nav-item">
         <form  class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
             <button  type="submit" class="nav-link btn btn-link text-dark">Logout</button>

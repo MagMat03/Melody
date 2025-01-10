@@ -1,0 +1,47 @@
+﻿@model IEnumerable<Melody.Models.Song>
+
+@{
+    ViewData["Title"] = "My Songs";
+}
+
+<h1>Index</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Artist.FirstName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Artist.LastName)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Artist.FirstName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Artist.LastName)
+                </td>
+                <td>
+                    <form method="POST" asp-action="AddToPlaylist">
+                        <input value="@item.SongID" hidden name="SongId" />
+                        <button class="btn btn-danger" type="submit">Remove from playlist</button>
+                    </form>
+                </td>
+
+            </tr>
+        }
+    </tbody>
+</table>
