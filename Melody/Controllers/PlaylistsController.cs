@@ -30,8 +30,8 @@ namespace Melody.Controllers
                 .Include(p => p.User)
                 .Include(p => p.Songs)
                 .ThenInclude(s => s.Artist)
-                .Where(p => p.User == user)
-                .FirstOrDefault();
+                .FirstOrDefault(p => p.User == user);
+
             if (playlist == null) {
                 return View(new List<Song>());
             }
@@ -163,6 +163,25 @@ namespace Melody.Controllers
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
+        }
+
+        [HttpPost]
+        public IActionResult RemoveFromPlaylist(int songId)
+        {
+            var song = _context.Songs.FirstOrDefault(s => s.SongID == songId);
+            if (song == null)
+            {
+                return NotFound();
+            }
+
+            var user = GetUser();
+            var playlist = _context.Playlists.Include(p => p.User).FirstOrDefault(p => p.User == user);
+            if (playlist != null)
+            {
+                _context.Database.ExecuteSqlRaw("EXEC RemoveFromPlaylist @p0, @p1", song.SongID, playlist.Id);
+            }
+
+            return RedirectToAction("Index");
         }
 
         private bool PlaylistExists(int id)

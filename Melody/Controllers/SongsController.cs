@@ -197,16 +197,16 @@ namespace Melody.Controllers
         }
 
         [HttpPost]
-        public IActionResult AddToPlaylist(AddToPlaylistViewModel model)
+        public IActionResult AddToPlaylist(int songId)
         {
-            var song = _context.Songs.FirstOrDefault(s => s.SongID == model.SongId);
+            var song = _context.Songs.FirstOrDefault(s => s.SongID == songId);
             if(song == null)
             {
                 return NotFound();
             }
 
             var user = GetUser();
-            var playlist = _context.Playlists.Include(p => p.User).FirstOrDefault(p => p.User == user);
+            var playlist = _context.Playlists.Include(p => p.User).Include(p => p.Songs).FirstOrDefault(p => p.User == user);
             if (playlist == null)
             {
                 playlist = new Playlist
@@ -217,8 +217,11 @@ namespace Melody.Controllers
                 _context.Playlists.Add(playlist);
                 _context.SaveChanges();
             }
-            playlist.Songs.Add(song);
-            _context.SaveChanges();
+            if(!playlist.Songs.Exists(p => p.SongID == songId))
+            {
+                playlist.Songs.Add(song);
+                _context.SaveChanges();
+            }
             return RedirectToAction("Index");
         }
 

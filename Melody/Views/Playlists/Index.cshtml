@@ -35,7 +35,7 @@
                     @Html.DisplayFor(modelItem => item.Artist.LastName)
                 </td>
                 <td>
-                    <form method="POST" asp-action="AddToPlaylist">
+                    <form method="POST" asp-action="RemoveFromPlaylist">
                         <input value="@item.SongID" hidden name="SongId" />
                         <button class="btn btn-danger" type="submit">Remove from playlist</button>
                     </form>
