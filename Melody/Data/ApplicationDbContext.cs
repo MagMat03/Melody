@@ -13,5 +13,6 @@ namespace Melody.Data
 
         public DbSet<Song> Songs { get; set; }
         public DbSet<Playlist> Playlists { get; set; }
+        public DbSet<RemovedFromPlaylist> RemovedFromPlaylists { get; set; }
     }
 }

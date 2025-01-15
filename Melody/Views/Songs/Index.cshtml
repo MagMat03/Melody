@@ -4,7 +4,7 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>Songs</h1>
 
 @if (ViewBag.IsArtist)
 {
@@ -29,11 +29,11 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Title)
-            </td>
+        @foreach (var item in Model) {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Artist.FirstName)
                 </td>
@@ -49,9 +49,13 @@
                 @if (ViewBag.IsArtist)
                 {
                     <td>
-                        <a asp-action="Edit" asp-route-id="@item.SongID">Edit</a> |
-                        <a asp-action="Details" asp-route-id="@item.SongID">Details</a> |
-                        <a asp-action="Delete" asp-route-id="@item.SongID">Delete</a>
+                        <a asp-action="Details" asp-route-id="@item.SongID">Details</a>
+                        @if (ViewBag.ArtistSongs.Contains(item))
+                        {
+                            @("|") <a asp-action="Edit" asp-route-id="@item.SongID">Edit</a> @("|")
+                            <a asp-action="Delete" asp-route-id="@item.SongID"> Delete </a>
+                        }
+
                     </td>
                 } else {
                     <td></td>

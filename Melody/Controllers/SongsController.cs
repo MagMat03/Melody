@@ -27,6 +27,7 @@ namespace Melody.Controllers
         {
             var user = GetUser();
             ViewBag.IsArtist = user.IsArtist;
+            ViewBag.ArtistSongs = _context.Songs.Include(s => s.Artist).Where(s => s.Artist == user).ToList();
             return View(await _context.Songs.Include(s => s.Artist).ToListAsync());
         }
 
@@ -107,6 +108,12 @@ namespace Melody.Controllers
             {
                 return NotFound();
             }
+
+            if (song.Artist != user)
+            {
+                return Forbid();
+            }
+
             return View(song);
         }
 
@@ -115,7 +122,7 @@ namespace Melody.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("SongID,Title")] Song song)
+        public async Task<IActionResult> Edit(int id, SongEditViewModel songModel)
         {
             var user = GetUser();
             if (user == null || !user.IsArtist)
@@ -123,15 +130,22 @@ namespace Melody.Controllers
                 return Forbid();
             }
 
-            if (id != song.SongID)
+            var song = _context.Songs.Include(s => s.Artist).FirstOrDefault(s => s.SongID == id);
+            if (song == null)
             {
                 return NotFound();
+            }
+
+            if(song.Artist != user)
+            {
+                return Forbid();
             }
 
             if (ModelState.IsValid)
             {
                 try
                 {
+                    song.Title = songModel.Title;
                     _context.Update(song);
                     await _context.SaveChangesAsync();
                 }
@@ -172,6 +186,11 @@ namespace Melody.Controllers
                 return NotFound();
             }
 
+            if (song.Artist != user)
+            {
+                return Forbid();
+            }
+
             return View(song);
         }
 
@@ -186,9 +205,22 @@ namespace Melody.Controllers
                 return Forbid();
             }
 
-            var song = await _context.Songs.FindAsync(id);
+            var song = _context.Songs.Include(s => s.Playlists).FirstOrDefault(s => s.SongID == id);
+
+            if (song == null)
+            {
+                return NotFound();
+            }
+
+            if (song.Artist != user)
+            {
+                return Forbid();
+            }
+
             if (song != null)
             {
+                song.Playlists.Clear();
+                _context.Songs.Update(song);
                 _context.Songs.Remove(song);
             }
 
